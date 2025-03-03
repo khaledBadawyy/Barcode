@@ -49,7 +49,7 @@
 <body class="bg-gray-100 p-6 text-center">
     <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-xl font-bold text-red-500">تفاصيل المنتج</h2>
-        <div class="grid grid-cols-3 gap-6 mt-4">
+        <div class="md:grid block grid-cols-3 gap-6 mt-4">
             <div class="col-span-1 flex flex-col items-center">
                 <p class="mt-2 font-semibold">الباركود</p>
                 <div id="print-area">
@@ -63,7 +63,7 @@
                     onclick="printBarcode(false)">طباعة الباركود بدون السعر</button>
             </div>
             <div class="col-span-2 text-right">
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4 mt-[10px]">
                     <label class="text-gray-600">اسم المنتج</label>
                     <input type="text" id="product-name" class="p-2 border rounded" value="عصير عمان برتقال"
                         oninput="updateProductLabel()">
@@ -92,7 +92,7 @@
             JsBarcode("#barcode", barcodeValue, {
                 format: "CODE128",
                 displayValue: true,
-                fontSize: 14,
+                fontSize: 24,
                 height: 50
             });
             document.getElementById('barcode-price').textContent = "";
