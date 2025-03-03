@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> barcode-price</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            @page {
+                margin: 0;
+
+            }
+
+            #print-area,
+            #print-area * {
+                visibility: visible;
+            }
+
+            #print-area {
+                position: absolute;
+                left: 50%;
+                top: 20px;
+                transform: translateX(-50%);
+                text-align: center;
+            }
+        }
+
+
+        .price-label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-6 text-center">
+    <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-red-500">تفاصيل المنتج</h2>
+        <div class="grid grid-cols-3 gap-6 mt-4">
+            <!--Barcode-->
+            <div class="col-span-1 flex flex-col items-center">
+                <p class="mt-2 font-semibold">الباركود</p>
+                <div id="print-area">
+                    <svg id="barcode"></svg>
+                    <p id="barcode-price" class="price-label"></p>
+                </div>
+                <button class="mt-2 bg-[#FF440F] text-white px-4 py-2 rounded-lg" onclick="printWithPrice()">طباعة
+                    الباركود مع السعر</button>
+                <button class="mt-2 bg-[#FF440F] text-white px-4 py-2 rounded-lg" onclick="printWithoutPrice()">طباعة
+                    الباركود بدون السعر</button>
+            </div>
+
+            <!--Detailes-->
+            <div class="col-span-2 text-right">
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="text-gray-600">اسم المنتج</label>
+                    <input type="text" id="product-name" class="p-2 border rounded" value="عصير عمان برتقال">
+
+                    <label class="text-gray-600">سعر البيع</label>
+                    <input type="number" id="product-price" class="p-2 border rounded" value="150">
+                    <label class="text-gray-600">الكمية</label>
+                    <input type="number" id="product-quantity" class="p-2 border rounded" value="10">
+                    <label class="text-gray-600">البـاركود</label>
+                    <input type="number" id="barcode-input" class="p-2 border rounded" value="6223000420027"
+                        oninput="generateBarcode()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateBarcode() {
+            const barcodeValue = document.getElementById('barcode-input').value;
+
+            if (barcodeValue.length < 12 || barcodeValue.length > 13) {
+                document.getElementById('barcode-price').textContent = "الباركود غير صالح";
+                return;
+            }
+
+            JsBarcode("#barcode", barcodeValue, {
+                format: "EAN13",
+                displayValue: true,
+                fontSize: 18,
+                height: 80
+            });
+
+            document.getElementById('barcode-price').textContent = "";
+        }
+
+        function printWithPrice() {
+            const price = document.getElementById('product-price').value;
+            const barcodeValue = document.getElementById('barcode-input').value;
+
+            if (barcodeValue.length < 12 || barcodeValue.length > 13) {
+                alert("الرجاء إدخال باركود صالح من 12 أو 13 رقمًا");
+                return;
+            }
+
+            document.getElementById('barcode-price').textContent = `السعر: ${price} جنيه`;
+
+            JsBarcode("#barcode", barcodeValue, {
+                format: "EAN13",
+                displayValue: true,
+                fontSize: 18,
+                height: 80
+            });
+
+            window.print();
+        }
+
+        function printWithoutPrice() {
+            const barcodeValue = document.getElementById('barcode-input').value;
+
+            if (barcodeValue.length < 12 || barcodeValue.length > 13) {
+                alert("الرجاء إدخال باركود صالح من 12 أو 13 رقمًا");
+                return;
+            }
+
+            document.getElementById('barcode-price').textContent = "";
+
+            JsBarcode("#barcode", barcodeValue, {
+                format: "EAN13",
+                displayValue: true,
+                fontSize: 18,
+                height: 80
+            });
+
+            window.print();
+        }
+
+        window.onload = generateBarcode;
+    </script>
+</body>
+
+</html>
